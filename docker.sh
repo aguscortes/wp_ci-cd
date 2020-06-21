@@ -14,23 +14,38 @@ sudo curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-
 sudo chmod +x /usr/local/bin/docker-compose
 
 # install git
-sudo apt-get install git -y
+sudo yum install git -y
 
 # Setup environment
-mkdir ./docker
-echo """version: '2'
-v
+sudo echo """version: '3'
+
 services:
   mysql:
-    image: mysql:5.7
+    image: mariadb
     restart: always
     ports:
       - 8081:3306
+    volumes:
+      - ./db_data:/var/lib/mysql
     environment:
-      MYSQL_USER: wordpress
       MYSQL_ROOT_PASSWORD: wordpress
       MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
       MYSQL_PASSWORD: wordpress
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      PMA_ARBITRARY: 1
+      MYSQL_ROOT_PASSWORD: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    restart: always
+    ports:
+      - 8082:80
+    links:
+      - mysql
 
   wordpress:
     depends_on:
@@ -39,8 +54,11 @@ services:
     ports:
       - 8080:80
     restart: always
+    volumes:
+      - ./wordpress:/var/www/html
+    links:
+      - mysql
     environment:
       WORDPRESS_DB_HOST: mysql:3306
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: wordpress"""  > ./docker/docker-compose.yml
-docker-compose up -d      

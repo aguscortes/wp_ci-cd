@@ -52,4 +52,10 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# Project code and databases
+dev/
+prod/
+test/
+
+
 # End of https://www.toptal.com/developers/gitignore/api/windows,linux,vagrant

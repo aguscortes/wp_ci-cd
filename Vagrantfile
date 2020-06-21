@@ -15,10 +15,13 @@ Vagrant.configure("2") do |config|
     prod.vm.hostname = 'prod'
     prod.vm.box_url = "centos/7"
 
+    prod.vm.synced_folder "prod/wordpress", "/home/vagrant/docker/wordpress", type: "virtualbox", owner: "vagrant", group: "vagrant"
+    prod.vm.synced_folder "prod/db_data", "/home/vagrant/docker/db_data", type: "virtualbox", owner: "vagrant", group: "vagrant"
+    prod.vm.synced_folder "test/nginx", "/home/vagrant/docker/nginx", type: "virtualbox", owner: "vagrant", group: "vagrant"
     prod.vm.network :public_network, ip: "192.168.1.100"
     prod.vm.provider :virtualbox do |v|
       v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-      v.customize ["modifyvm", :id, "--memory", 512]
+      v.customize ["modifyvm", :id, "--memory", 1024]
       v.customize ["modifyvm", :id, "--name", "prod"]
     end
     config.vm.provision "shell", path: 'docker.sh'   
@@ -29,10 +32,13 @@ Vagrant.configure("2") do |config|
     dev.vm.hostname = 'dev'
     dev.vm.box_url = "centos/7"
 
+    dev.vm.synced_folder "dev/wordpress", "/home/vagrant/docker/wordpress", type: "virtualbox", owner: "vagrant", group: "vagrant"
+    dev.vm.synced_folder "dev/db_data", "/home/vagrant/docker/db_data", type: "virtualbox", owner: "vagrant", group: "vagrant"   
+    dev.vm.synced_folder "test/nginx", "/home/vagrant/docker/nginx", type: "virtualbox", owner: "vagrant", group: "vagrant"
     dev.vm.network :public_network, ip: "192.168.1.101"
     dev.vm.provider :virtualbox do |v|
       v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-      v.customize ["modifyvm", :id, "--memory", 512]
+      v.customize ["modifyvm", :id, "--memory", 1024]
       v.customize ["modifyvm", :id, "--name", "dev"]
     end
     config.vm.provision "shell", path: 'docker.sh'   
@@ -43,10 +49,13 @@ Vagrant.configure("2") do |config|
     test.vm.hostname = 'test'
     test.vm.box_url = "centos/7"
 
+    test.vm.synced_folder "test/wordpress", "/home/vagrant/docker/wordpress", type: "virtualbox", owner: "vagrant", group: "vagrant"
+    test.vm.synced_folder "test/db_data", "/home/vagrant/docker/db_data", type: "virtualbox", owner: "vagrant", group: "vagrant"
+    test.vm.synced_folder "test/nginx", "/home/vagrant/docker/nginx", type: "virtualbox", owner: "vagrant", group: "vagrant"
     test.vm.network :public_network, ip: "192.168.1.102"
     test.vm.provider :virtualbox do |v|
       v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-      v.customize ["modifyvm", :id, "--memory", 512]
+      v.customize ["modifyvm", :id, "--memory", 1024]
       v.customize ["modifyvm", :id, "--name", "test"]
     end
     config.vm.provision "shell", path: 'docker.sh'

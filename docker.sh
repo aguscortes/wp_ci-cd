@@ -26,7 +26,8 @@ services:
     ports:
       - 8081:3306
     volumes:
-      - ./db_data:/var/lib/mysql
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/atadatos.cfg:/etc/mysql/mysql.conf.d/wordpress.cnf
     environment:
       MYSQL_ROOT_PASSWORD: wordpress
       MYSQL_DATABASE: wordpress
@@ -55,10 +56,25 @@ services:
       - 8080:80
     restart: always
     volumes:
-      - ./wordpress:/var/www/html
+      - ./wordpress/wp-content:/var/www/html/wp-content
+      - ./wordpress/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+      - ./wordpress/server-status.conf:/etc/apache2/conf-available/server-status.conf
+      - ./wordpress/htaccess:/var/www/html/.htaccess      
     links:
       - mysql
     environment:
       WORDPRESS_DB_HOST: mysql:3306
       WORDPRESS_DB_USER: wordpress
-      WORDPRESS_DB_PASSWORD: wordpress"""  > ./docker/docker-compose.yml
+      WORDPRESS_DB_PASSWORD: wordpress
+      
+  backup:
+    depends_on:
+      - mysql
+      - wordpress
+    volumes:
+      - ./backup:/root/backup      
+    image: google/cloud-sdk:alpine
+    restart: always      
+    links:
+      - mysql
+      - wordpress"""  > ./docker/docker-compose.yml

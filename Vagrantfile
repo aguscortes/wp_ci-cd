@@ -25,6 +25,9 @@ Vagrant.configure("2") do |config|
       v.customize ["modifyvm", :id, "--name", "prod"]
     end
     config.vm.provision "shell", path: 'docker.sh'   
+    config.ssh.private_key_path = ""
+    config.ssh.keys_only = false
+    config.ssh.keep_alive = true
   end
 
   config.vm.define "dev" do |dev|

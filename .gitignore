@@ -53,9 +53,15 @@ $RECYCLE.BIN/
 *.lnk
 
 # Project code and databases
-dev/
-prod/
-test/
-
+test/wordpress/*
+test/mysql/*
+test/ngnix/*
+dev/wordpress/*
+dev/mysql/*
+dev/ngnix/*
+prod/wordpress/*
+prod/mysql/*
+prod/ngnix/*
+key/
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,linux,vagrant
